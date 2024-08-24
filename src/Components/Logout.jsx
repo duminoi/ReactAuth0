@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import Form from "./Form";
 import { useAuth0 } from "@auth0/auth0-react";
+import { AppContext } from "./Context";
 
 export default function Logout() {
   const { logout, user } = useAuth0();

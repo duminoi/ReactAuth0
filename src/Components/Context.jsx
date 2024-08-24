@@ -7,6 +7,7 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [toastContent, setToast] = useState("idle");
+  const [info, setInfo] = useState({});
 
   return (
     <AppContext.Provider

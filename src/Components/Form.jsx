@@ -1,14 +1,28 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AppContext } from "./Context";
 import axios from "axios";
 
 export default function Form() {
   const { user } = useAuth0();
   const { toastContent, setToast } = useContext(AppContext);
+  const [form, setForm] = useState({ name: user?.name, email: user?.email });
   const service_id = "service_tvuc3ow";
   const template_id = "template_0p42ymb";
   const public_key = "74wQpoDiUQWlfWlgQ";
+  const handleChange = (e) => {
+    if (e.target.name == "user_name") {
+      setForm((preState) => {
+        return { ...preState, name: e.target.value };
+      });
+    } else {
+      if (e.target.name == "user_email") {
+        setForm((preState) => {
+          return { ...preState, email: e.target.value };
+        });
+      }
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -48,11 +62,14 @@ export default function Form() {
           Name
         </label>
         <input
+          onChange={(e) => {
+            handleChange(e);
+          }}
           className="p-[10px] text-[16px] font-[500] placeholder:text-purple-700 border border-purple-800 border-solid rounded-[4px] text-purple "
           type="text"
           name="user_name"
           placeholder="Enter your name..."
-          value={user?.name}
+          value={form.email}
         />
       </div>
       {/* end name */}
