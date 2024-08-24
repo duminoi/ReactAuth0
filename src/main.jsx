@@ -13,7 +13,7 @@ createRoot(document.getElementById("root")).render(
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      redirectUrl={window.location.origin}
+      redirectUri={window.location.origin}
     >
       <AppProvider>
         <App />

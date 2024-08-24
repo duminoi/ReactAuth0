@@ -5,10 +5,18 @@ import React, { createContext, useState } from "react";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [state, setState] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [toastContent, setToast] = useState("idle");
 
   return (
-    <AppContext.Provider value={{ state, setState }}>
+    <AppContext.Provider
+      value={{
+        loading,
+        setLoading,
+        toastContent,
+        setToast,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

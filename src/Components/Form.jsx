@@ -1,9 +1,48 @@
-import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import React, { useContext } from "react";
+import { AppContext } from "./Context";
+import axios from "axios";
 
 export default function Form() {
-  const email = "dminso1koaiso2@gmail.com";
+  const { user } = useAuth0();
+  const { toastContent, setToast } = useContext(AppContext);
+  const service_id = "service_tvuc3ow";
+  const template_id = "template_0p42ymb";
+  const public_key = "74wQpoDiUQWlfWlgQ";
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.append("service_id", service_id);
+    formData.append("template_id", template_id);
+    formData.append("user_id", public_key);
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+
+    try {
+      const res = await axios.post(
+        "https://api.emailjs.com/api/v1.0/email/send-form",
+        formData,
+        {
+          headers: "application/json",
+        }
+      );
+      if (res.status <= 200 && res.status >= 300) {
+        throw new Error();
+      }
+      setToast("Gửi Email thành công!!!");
+    } catch (e) {
+      console.log(e);
+      setToast("Gửi Email thất bại!!!");
+    }
+  };
   return (
-    <form className="w-full mt-[30px]">
+    <form
+      onSubmit={(e) => {
+        handleSubmit(e);
+      }}
+      className="w-full mt-[30px]"
+    >
       <div className="flex flex-col gap-x-2.5 mt-[10px]">
         <label className="text-purple-800 font-semibold " htmlFor="">
           Name
@@ -13,7 +52,7 @@ export default function Form() {
           type="text"
           name="user_name"
           placeholder="Enter your name..."
-          value={"43.Nguyễn Đức Minh"}
+          value={user?.name}
         />
       </div>
       {/* end name */}
@@ -26,7 +65,7 @@ export default function Form() {
           type="email"
           name="user_email"
           placeholder="Enter your email..."
-          value={email}
+          value={user?.email}
         />
       </div>
       {/* end email */}
