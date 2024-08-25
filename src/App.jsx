@@ -6,9 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { AppContext } from "./Components/Context";
 import Login from "./Components/Login";
 import Logout from "./Components/Logout";
+import Spinner from "./Components/Spinner";
 
 export default function App() {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, isLoading } = useAuth0();
   const { toastContent, setToast, loading } = useContext(AppContext);
   useEffect(() => {
     if (toastContent != "idle") {
@@ -19,6 +20,7 @@ export default function App() {
   return (
     <div>
       <ToastContainer />
+      {isLoading && <Spinner />}
       {!isAuthenticated ? <Login /> : <Logout />}
     </div>
   );

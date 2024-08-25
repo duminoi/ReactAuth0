@@ -6,7 +6,14 @@ import axios from "axios";
 export default function Form() {
   const { user } = useAuth0();
   const { toastContent, setToast } = useContext(AppContext);
-  const [form, setForm] = useState({ name: user?.name, email: user?.email });
+  const [errors, setErrors] = useState("");
+  const [form, setForm] = useState({
+    name: user?.name,
+    email: user?.email,
+    message: "",
+  });
+  console.log(user);
+
   const service_id = "service_tvuc3ow";
   const template_id = "template_0p42ymb";
   const public_key = "74wQpoDiUQWlfWlgQ";
@@ -20,6 +27,12 @@ export default function Form() {
         setForm((preState) => {
           return { ...preState, email: e.target.value };
         });
+      } else {
+        if (e.target.name == "message") {
+          setForm((preState) => {
+            return { ...preState, message: e.target.value };
+          });
+        }
       }
     }
   };
@@ -34,17 +47,22 @@ export default function Form() {
     });
 
     try {
-      const res = await axios.post(
-        "https://api.emailjs.com/api/v1.0/email/send-form",
-        formData,
-        {
-          headers: "application/json",
+      if (!form.message) {
+        setErrors("Vui lòng nhập nội dung");
+      } else {
+        setErrors("");
+        const res = await axios.post(
+          "https://api.emailjs.com/api/v1.0/email/send-form",
+          formData,
+          {
+            headers: "application/json",
+          }
+        );
+        if (res.status <= 200 && res.status >= 300) {
+          throw new Error();
         }
-      );
-      if (res.status <= 200 && res.status >= 300) {
-        throw new Error();
+        setToast("Gửi Email thành công!!!");
       }
-      setToast("Gửi Email thành công!!!");
     } catch (e) {
       console.log(e);
       setToast("Gửi Email thất bại!!!");
@@ -73,31 +91,39 @@ export default function Form() {
         />
       </div>
       {/* end name */}
-      <div className="flex flex-col gap-x-2.5 mt-[10px]">
-        <label className="text-purple-800 font-semibold" htmlFor="">
-          Email
-        </label>
-        <input
-          onChange={(e) => {
-            handleChange(e);
-          }}
-          className="p-[10px] text-[16px] font-[500] placeholder-purple-700 border border-purple-800 border-solid rounded-[4px] text-purple "
-          type="email"
-          name="user_email"
-          placeholder="Enter your email..."
-          value={form.email}
-        />
-      </div>
+      {user.sub.includes("facebook") ? (
+        ""
+      ) : (
+        <div className="flex flex-col gap-x-2.5 mt-[10px]">
+          <label className="text-purple-800 font-semibold" htmlFor="">
+            Email
+          </label>
+          <input
+            onChange={(e) => {
+              handleChange(e);
+            }}
+            className="p-[10px] text-[16px] font-[500] placeholder-purple-700 border border-purple-800 border-solid rounded-[4px] text-purple "
+            type="email"
+            name="user_email"
+            placeholder="Enter your email..."
+            value={form.email}
+          />
+        </div>
+      )}
       {/* end email */}
       <div className="flex flex-col gap-x-2.5 mt-[10px]">
         <label className="text-purple-800 font-semibold" htmlFor="">
           Message
         </label>
         <textarea
+          onChange={(e) => {
+            handleChange(e);
+          }}
           className="p-[10px] text-[16px] font-[500] border border-purple-800 border-solid rounded-[4px] text-purple resize-none h-[150px]"
           name="message"
           placeholder="Enter your message..."
         />
+        <span className="text-red-400 italic text-xl">{errors}</span>
       </div>
       {/* end message */}
       <input

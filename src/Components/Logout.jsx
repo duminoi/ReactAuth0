@@ -1,9 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Form from "./Form";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AppContext } from "./Context";
 
 export default function Logout() {
+  const [status, setStatus] = useState(false);
+  const buttonStyle = {
+    backgroundColor: status ? "#9e9e9e6b" : "#ff1493",
+  };
+  const handleClick = () => {
+    setStatus(true);
+  };
   const { logout, user } = useAuth0();
   return (
     <div className=" w-[500px] my-[50px] mx-auto p-[20px] border border-purple-500 border-solid rounded-[10px]">
@@ -38,10 +45,13 @@ export default function Logout() {
       <button
         onClick={() => {
           logout();
+          handleClick();
         }}
+        style={buttonStyle}
         className="mt-[10px] w-full py-[10px] border-none rounded-[10px] bg-[#ff1493] text-white font-[500] text-[18px] cursor-pointer transition-transform linear duration-[0.2s] hover:scale-[90%] "
         value={"Send"}
         type="submit"
+        disabled={status}
       >
         Logout
       </button>
