@@ -69,7 +69,7 @@ export default function Form() {
           type="text"
           name="user_name"
           placeholder="Enter your name..."
-          value={form.email}
+          value={form.name}
         />
       </div>
       {/* end name */}
@@ -78,11 +78,14 @@ export default function Form() {
           Email
         </label>
         <input
+          onChange={(e) => {
+            handleChange(e);
+          }}
           className="p-[10px] text-[16px] font-[500] placeholder-purple-700 border border-purple-800 border-solid rounded-[4px] text-purple "
           type="email"
           name="user_email"
           placeholder="Enter your email..."
-          value={user?.email}
+          value={form.email}
         />
       </div>
       {/* end email */}
